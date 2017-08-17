@@ -1,0 +1,45 @@
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+
+# minimum_master_nodes need to be explicitly set when bound on a public IP
+# set to 1 to allow single node clusters
+# Details: https://github.com/elastic/elasticsearch/pull/17288
+discovery.zen.minimum_master_nodes: 2
+
+http.type: ssl_netty4
+
+readonlyrest:
+    prompt_for_basic_auth: false
+
+    access_control_rules:
+
+    - name: "::LOGSTASH::"
+      auth_key: logstash:logstash
+      actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
+      indices: ["logstash-*"]
+
+    - name: "::KIBANA-SRV::"
+      auth_key: kibana:kibana
+
+    - name: "::RO::"
+      auth_key: ro:dev
+      kibana_access: ro
+      indices: [ ".kibana", ".kibana-devnull", "logstash-*"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+
+    - name: "::RW::"
+      auth_key: rw:dev
+      kibana_access: rw
+      indices: [".kibana", ".kibana-devnull", "logstash-*"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+
+
+    - name: "::ADMIN::"
+      auth_key: admin:dev
+      # KIBANA ADMIN ACCESS NEEDED TO EDIT SECURITY SETTINGS IN ROR KIBANA APP!
+      kibana_access: admin
+
+    - name: "::WEBSITE SEARCH BOX::"
+      indices: ["public"]
+      actions: ["indices:data/read/*"]
+

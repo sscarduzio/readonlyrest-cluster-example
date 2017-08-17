@@ -1,0 +1,49 @@
+version: '2'
+services:
+  elasticsearch1:
+    image: readonlyrest_1.16.10-pre5_es5.5.1 
+#    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.1
+    container_name: elasticsearch1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m  -Dcom.readonlyrest.reloadsettingsonboot=true"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata1:/tmp/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  elasticsearch2:
+    image: readonlyrest_1.16.10-pre5_es5.5.1
+#    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m -Dcom.readonlyrest.reloadsettingsonboot=true"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata2:/tmp/data
+    networks:
+      - esnet
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+
+networks:
+  esnet:

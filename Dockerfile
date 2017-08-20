@@ -10,4 +10,4 @@ RUN cat /usr/share/elasticsearch/config/elasticsearch.yml
 USER elasticsearch
 ENV "ES_JAVA_OPTS"="-Xms512m -Xmx512m -Dcom.readonlyrest.reloadsettingsonboot=true"
 RUN yes | /usr/share/elasticsearch/bin/elasticsearch-plugin remove x-pack --purge
-RUN yes | /usr/share/elasticsearch/bin/elasticsearch-plugin install file:///tmp/ror551.zip
+RUN yes | /usr/share/elasticsearch/bin/elasticsearch-plugin install file:///tmp/ror.zip

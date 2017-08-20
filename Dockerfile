@@ -1,5 +1,5 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:5.5.1
-COPY ["ror551.zip","/tmp/"]
+COPY ["ror.zip","/tmp/"]
 COPY ["log4j2.properties","/usr/share/elasticsearch/config/"]
 COPY ["keystore.jks","/usr/share/elasticsearch/config/"]
 COPY ["elasticsearch.yml","/usr/share/elasticsearch/config/"]
